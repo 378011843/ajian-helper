@@ -1,0 +1,16 @@
+{
+    "name": "ajian/ajian-helper",
+    "description": "自用工具包",
+    "authors": [
+        {
+            "name": "ajian",
+            "email": "378011843@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ajian\\Helper\\": "src/"
+        }
+    },
+    "require": {}
+}
