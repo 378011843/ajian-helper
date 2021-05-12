@@ -3,6 +3,11 @@ namespace ajian\Helper;
 
 class Util
 {
+    /**
+     * http_get请求
+     * @param string $url 请求地址
+     * @return array
+     */
     static function https_get($url){
         $curl = curl_init();
         curl_setopt($curl,CURLOPT_URL,$url);
