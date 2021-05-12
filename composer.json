@@ -1,6 +1,8 @@
 {
     "name": "ajian/ajian-helper",
     "description": "自用工具包",
+    "license": "Apache-2.0",
+    "version": "1.0",
     "authors": [
         {
             "name": "ajian",
