@@ -1,0 +1,18 @@
+{
+    "name": "ajian/ajian-helper",
+    "description": "自用工具包",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "ajian",
+            "email": "378011843@qq.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Ajian\\Helper\\": "src/"
+        }
+    },
+    "require": {}
+}
