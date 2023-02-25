@@ -4,31 +4,26 @@ namespace Ajian\Helper;
 /**
  * Mysql类
  */
-class Mysql
+class MysqlUtil
 {
 
-    private static $link = null;//数据库连接
+    /**
+     * @var false|\mysqli|null 数据库连接对象
+     */
+    public $link = null;
 
     /**
-     * 私有的构造方法
+     * 构造方法 - 初始化单例数据库连接
      */
-    private function __construct()
+    public function __construct($hostname,$username,$password,$database)
     {
-    }
-
-    /**
-     * 连接数据库
-     * @return obj 资源对象
-     */
-    private static function conn()
-    {
-        if (self::$link === null) {
-//				$cfg = require './config.php';
-            global $config;
-            self::$link = new \Mysqli("127.0.0.1", "root", "root", "nesfsk_nss");
-            self::query("set names " . "utf-8");//设置字符集
+        if (!$this->link){
+            $this->link = mysqli_connect($hostname,$username,$password,$database);
+            if ($this->link->connect_error){
+                throw new \Exception('数据库连接失败');
+            }
+            $this->link->set_charset('utf-8');
         }
-        return self::$link;
     }
 
     /**
@@ -36,9 +31,9 @@ class Mysql
      * @param str $sql 查询语句
      * @return obj      结果集对象
      */
-    public static function query($sql)
+    public function query($sql)
     {
-        return self::conn()->query($sql);
+        return $this->link->query($sql);
     }
 
     /**
@@ -46,10 +41,10 @@ class Mysql
      * @param str $sql 查询语句
      * @return arr      多行数据
      */
-    public static function getAll($sql)
+    public function getAll($sql)
     {
-        $data = array();
-        $res = self::query($sql);
+        $data = [];
+        $res = $this->query($sql);
         while ($row = $res->fetch_assoc()) {
             $data[] = $row;
         }
@@ -61,9 +56,9 @@ class Mysql
      * @param str $row 查询语句
      * @return arr      单行数据
      */
-    public static function getRow($sql)
+    public function getRow($sql)
     {
-        $res = self::query($sql);
+        $res = $this->query($sql);
         return $res->fetch_assoc();
     }
 
@@ -72,9 +67,9 @@ class Mysql
      * @param str $sql 查询语句
      * @return str      单个结果
      */
-    public static function getOne($sql)
+    public function getOne($sql)
     {
-        $res = self::query($sql);
+        $res = $this->query($sql);
         $data = $res->fetch_row();
         return $data[0];
     }
@@ -87,7 +82,7 @@ class Mysql
      * @param str $where 更新条件
      * @return bool 插入/更新是否成功
      */
-    public static function exec($table, $data, $act = 'insert', $where = '0')
+    public function exec($table, $data, $act = 'insert', $where = '0')
     {
         //插入操作
         if ($act == 'insert') {
@@ -102,34 +97,35 @@ class Mysql
             $sql = rtrim($sql, ',');
             $sql .= ' where 1 and ' . $where;
         }
-        return self::query($sql);
+        return $this->query($sql);
     }
 
     /**
      * 获取最近一次插入的主键值
      * @return int 主键
      */
-    public static function getLastId()
+    public function getLastId()
     {
-        return self::conn()->insert_id;
+        return $this->link->insert_id;
     }
 
     /**
      * 获取最近一次操作影响的行数
      * @return int 影响的行数
      */
-    public static function getAffectedRows()
+    public function getAffectedRows()
     {
-        return self::conn()->affected_rows;
+        return $this->link->affected_rows;
     }
 
     /**
      * 关闭数据库连接
      * @return bool 是否关闭
      */
-    public static function close()
+    public function __destruct()
     {
-        return self::conn()->close();
+        $this->link->close();
+        $this->link = null;
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 
 namespace Ajian\Helper;
-class TDredis
+class RedisUtil
 {
 
     private $redis; //redis对象
